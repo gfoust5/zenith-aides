@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zenith Aides — Zenith Performance</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/CircleWhite.png">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #000;
+    border-bottom: 1px solid #AE9465;
+    padding: 48px 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 380px; height: 380px;
+    border: 1px solid #AE9465;
+    border-radius: 50%;
+    opacity: 0.06;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    right: 40px; top: 40px;
+    width: 200px; height: 200px;
+    border: 1px solid #E7D19D;
+    border-radius: 50%;
+    opacity: 0.04;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .logo-img {
+    height: 52px;
+    width: auto;
+  }
+
+  h1 {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fff;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  h1 span { color: #E7D19D; }
+
+  .hero-sub {
+    font-size: 12px;
+    color: #5A5554;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 14px;
+    max-width: 480px;
+    line-height: 1.8;
+  }
+
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, #AE9465, #E7D19D);
+    margin-top: 20px;
+    border-radius: 1px;
+  }
+
+  /* ── MOTTO BAND ── */
+  .motto-band {
+    background: #090909;
+    border-top: 1px solid #AE9465;
+    border-bottom: 1px solid #111;
+    padding: 18px 48px;
+  }
+
+  .motto-text {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #5A5554;
+    text-transform: uppercase;
+    line-height: 1.8;
+  }
+
+  .motto-text strong { color: #E7D19D; font-weight: 600; }
+
+  /* ── MAIN SECTION ── */
+  main {
+    padding: 48px 48px 60px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: #AE9465;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #151515;
+  }
+
+  /* ── AIDES GRID ── */
+  .aides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .aide-card {
+    background: #080808;
+    border: 1px solid #1a1a1a;
+    border-radius: 3px;
+    padding: 24px 20px 20px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+
+  .aide-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #AE9465, #E7D19D);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .aide-card:hover {
+    border-color: #AE9465;
+    background: #0c0c0c;
+  }
+
+  .aide-card:hover::before { opacity: 1; }
+
+  .card-num {
+    font-size: 11px;
+    color: #AE9465;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+  }
+
+  .card-desc {
+    font-size: 11px;
+    color: #5A5554;
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    flex: 1;
+  }
+
+  .card-cta {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: #AE9465;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid #111;
+  }
+
+  .card-cta::after { content: '→'; font-size: 13px; }
+
+  /* locked / greyed-out cards */
+  .aide-locked {
+    opacity: 0.28;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .card-cta--locked {
+    color: #5A5554;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid #111;
+  }
+
+  .card-cta--locked::after { content: '—'; font-size: 13px; }
+
+  /* placeholder card */
+  .aide-placeholder {
+    background: #040404;
+    border: 1px dashed #181818;
+    border-radius: 3px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 150px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .aide-placeholder:hover { border-color: #2a2a2a; }
+
+  .ph-plus {
+    font-size: 22px;
+    color: #222;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .ph-label {
+    font-size: 10px;
+    color: #222;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 22px 48px;
+    border-top: 1px solid #0e0e0e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-brand {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: #222;
+    text-transform: uppercase;
+  }
+
+  .footer-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: #222;
+    text-transform: uppercase;
+  }
+
+  /* ── RETURN BUTTON (used on sub-pages) ── */
+  .return-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #AE9465;
+    background: transparent;
+    border: 1px solid #AE9465;
+    border-radius: 2px;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .return-btn::before { content: '←'; font-size: 12px; }
+  .return-btn:hover { background: #AE9465; color: #000; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-row">
+    <img class="logo-img" src="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP_1PrimaryGold.png" alt="Zenith Performance">
+  </div>
+  <h1>Zenith<br><span>Aides</span></h1>
+  <p class="hero-sub">Elite coaching resources built for athletes who refuse to settle. Select a tool and get to work.</p>
+  <div class="divider"></div>
+</header>
+
+<div class="motto-band">
+  <p class="motto-text">Every <strong>world record</strong> began with a plan. These tools are your blueprint — <strong>use them</strong>.</p>
+</div>
+
+<main>
+  <div class="section-label">Your Resources</div>
+  <div class="aides-grid">
+
+    <!-- LIVE AIDE -->
+    <a class="aide-card" href="nutrition-calculator.html">
+      <div class="card-num">01</div>
+      <div class="card-title">Nutrition Calculator</div>
+      <div class="card-desc">Dial in your calories, macros, and fueling strategy around your training and competition schedule.</div>
+      <div class="card-cta">Open Aide</div>
+    </a>
+
+    <!-- GREYED OUT — Coming Soon -->
+    <div class="aide-card aide-locked">
+      <div class="card-num">02</div>
+      <div class="card-title">Competition Day Checklist</div>
+      <div class="card-desc">Everything you need, nothing you don't. Walk into the platform fully prepared.</div>
+      <div class="card-cta card-cta--locked">Coming Soon</div>
+    </div>
+
+    <div class="aide-card aide-locked">
+      <div class="card-num">03</div>
+      <div class="card-title">Attempt Selection Guide</div>
+      <div class="card-desc">Command your openers, seconds, and thirds with calculated precision.</div>
+      <div class="card-cta card-cta--locked">Coming Soon</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <span class="footer-brand">© Zenith Performance</span>
+  <span class="footer-tag">Coaching Tools — Restricted Use</span>
+</footer>
+
+</body>
+</html>
