@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meet Day Pack List — Zenith Performance</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/CircleWhite.png">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Josefin Sans', sans-serif; background: #000; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    background: #000;
+    border-bottom: 1px solid #AE9465;
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .logo-img { height: 40px; width: auto; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .return-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #AE9465;
+    background: transparent;
+    border: 1px solid #AE9465;
+    border-radius: 2px;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .return-btn::before { content: '←'; font-size: 12px; }
+  .return-btn:hover { background: #AE9465; color: #000; }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #000;
+    background: linear-gradient(90deg, #AE9465, #E7D19D);
+    border: none;
+    border-radius: 2px;
+    padding: 9px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .download-btn:hover { opacity: 0.85; }
+  .download-btn::after { content: '↓'; font-size: 14px; }
+
+  .page-title {
+    padding: 24px 48px 0;
+  }
+  .page-title h1 {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: #AE9465;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .page-title p {
+    font-size: 11px;
+    color: #5A5554;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .viewer-wrap {
+    flex: 1;
+    padding: 20px 48px 48px;
+  }
+
+  .pdf-frame {
+    width: 100%;
+    height: 80vh;
+    border: 1px solid #1a1a1a;
+    border-radius: 3px;
+    display: block;
+  }
+
+  .mobile-fallback {
+    display: none;
+    background: #080808;
+    border: 1px solid #1a1a1a;
+    border-radius: 3px;
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .mobile-fallback p {
+    font-size: 12px;
+    color: #5A5554;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 20px 24px; }
+    .page-title { padding: 20px 24px 0; }
+    .viewer-wrap { padding: 16px 24px 40px; }
+    .pdf-frame { display: none; }
+    .mobile-fallback { display: block; }
+  }
+
+  footer {
+    padding: 22px 48px;
+    border-top: 1px solid #0e0e0e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-brand { font-size: 10px; letter-spacing: 0.22em; color: #222; text-transform: uppercase; }
+  .footer-tag { font-size: 10px; letter-spacing: 0.15em; color: #222; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo-img" src="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP_1PrimaryGold.png" alt="Zenith Performance">
+  <div class="header-right">
+    <a class="return-btn" href="index.html">Back</a>
+    <a class="download-btn" href="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP%20Meet%20Day%20Pack%20List.pdf" download="ZP_MeetDayPackList.pdf">Download</a>
+  </div>
+</header>
+
+<div class="page-title">
+  <h1>Meet Day Pack List</h1>
+  <p>Read only — use the download button to save your copy</p>
+</div>
+
+<div class="viewer-wrap">
+  <iframe
+    class="pdf-frame"
+    src="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP%20Meet%20Day%20Pack%20List.pdf"
+    title="Meet Day Pack List">
+  </iframe>
+
+  <!-- Shows on mobile instead of iframe -->
+  <div class="mobile-fallback">
+    <p>PDF preview isn't available on mobile.<br>Tap below to download your copy.</p>
+    <a class="download-btn" href="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP%20Meet%20Day%20Pack%20List.pdf" download="ZP_MeetDayPackList.pdf">Download Pack List</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-brand">© Zenith Performance</span>
+  <span class="footer-tag">Meet Day Resources</span>
+</footer>
+
+</body>
+</html>
