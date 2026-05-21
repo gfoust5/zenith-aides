@@ -545,6 +545,49 @@
     text-transform: uppercase;
   }
 
+  /* COACHING BUTTONS */
+  .coaching-btn-primary {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 28px;
+    display: inline-block;
+    transition: all 0.2s;
+    border: 2px solid var(--gold);
+    cursor: pointer;
+  }
+
+  .coaching-btn-primary:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+  }
+
+  .coaching-btn-secondary {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: transparent;
+    color: var(--white);
+    padding: 16px 28px;
+    display: inline-block;
+    border: 2px solid rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .coaching-btn-secondary:hover {
+    border-color: var(--gold-light);
+    color: var(--gold-light);
+  }
+
   /* FOOTER */
   .footer { text-align: center; padding: 32px 0 48px; color: var(--muted); font-size: 12px; letter-spacing: 0.5px; }
 
@@ -915,12 +958,31 @@
     </div>
   </div>
 
+  <!-- COACHING CTA — always visible -->
+  <div style="background:var(--blue); margin:0 0 0 0; position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));"></div>
+    <div class="container" style="padding-top:36px; padding-bottom:36px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'Josefin Sans',sans-serif; font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--gold-light); margin-bottom:8px;">Want Better Than a Calculator?</div>
+          <h3 style="font-family:'Josefin Sans',sans-serif; font-size:clamp(20px,3.5vw,30px); font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--white); line-height:1.1; margin-bottom:10px;">A coach makes it exact.</h3>
+          <p style="font-size:13px; color:rgba(255,255,255,0.72); line-height:1.6; max-width:480px;">Calculators give you a starting point. Real results come from a real program built around your life, your goals, and your sport. If you are serious about competing or finally want to stop guessing — let's talk.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+          <a href="https://form.typeform.com/to/ecN92jOF" target="_blank" class="coaching-btn-primary" style="text-align:center; white-space:nowrap;">Apply for Coaching</a>
+          <a href="https://www.instagram.com/captain.zenith/" target="_blank" class="coaching-btn-secondary" style="text-align:center; white-space:nowrap;">Follow on Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- RESULTS -->
   <div class="results-panel" id="results">
     <div class="results-header">
       <h2>Your Zenith Nutrition Blueprint</h2>
       <p id="resultsSub">Precision-engineered for your physiology.</p>
     </div>
+
     <div class="results-body">
 
       <!-- CALORIE BOX -->
