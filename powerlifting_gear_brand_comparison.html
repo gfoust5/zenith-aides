@@ -1,0 +1,183 @@
+
+<h2 class="sr-only">Powerlifting competition gear brand comparison — browse by category and see top options with pros, cons, and pricing</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:1rem 0 1rem}
+.nav button{font-size:13px;padding:5px 12px;border-radius:99px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all 0.15s}
+.nav button.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.section{display:none}
+.section.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1rem}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.1rem}
+.card.pick{border:2px solid var(--color-border-info)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.brand{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.price{font-size:13px;color:var(--color-text-secondary);white-space:nowrap}
+.model{font-size:12px;color:var(--color-text-secondary);margin-bottom:8px}
+.badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.badge{font-size:11px;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.b-info{background:#E6F1FB;color:#0C447C}
+.b-gray{background:#F1EFE8;color:#444441}
+.b-pick{background:#E6F1FB;color:#0C447C;font-weight:500}
+.pros-cons{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.pros-cons span.pro{color:#27500A}
+.pros-cons span.con{color:#A32D2D}
+.note{font-size:12px;color:var(--color-text-tertiary);margin-top:8px;font-style:italic;line-height:1.5;border-top:0.5px solid var(--color-border-tertiary);padding-top:8px}
+.ask-btn{font-size:12px;margin-top:10px;padding:5px 12px;cursor:pointer;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary)}
+</style>
+
+<div class="nav" id="nav"></div>
+<div id="sections"></div>
+
+<script>
+const data = [
+  {
+    id:"singlet", label:"Singlet",
+    note:"Must be USAPL/IPF-approved. Check the IPF approved list before buying — not all singlets from good brands are approved for every fed.",
+    items:[
+      {brand:"Inzer",model:"Power Singlet",price:"$50–60",pick:true,tags:["IPF approved","classic"],pros:["Extremely durable","trusted in the sport for decades","good value"],cons:["Boxy fit on some body types","nothing fancy"]},
+      {brand:"SBD",model:"Singlet",price:"$90–110",pick:false,tags:["IPF approved","premium"],pros:["Excellent fit","flattering cut","looks great on platform"],cons:["Pricey","sometimes backordered"]},
+      {brand:"A7",model:"Meet Singlet",price:"$65–80",pick:false,tags:["IPF approved","popular"],pros:["Great fit","wide size range","lots of colorways"],cons:["Fabric feels thinner than Inzer","sizing can run small"]},
+      {brand:"Titan",model:"Triumph Singlet",price:"$50–65",pick:false,tags:["IPF approved"],pros:["Durable","affordable","solid option"],cons:["Older-school aesthetic","limited colors"]},
+    ]
+  },
+  {
+    id:"belt", label:"Belt",
+    note:"Lever vs prong is personal preference. Lever is faster between attempts; prong is more adjustable if your waist changes. Go 10mm for most lifters, 13mm for advanced. Must be IPF-spec (max 10cm width, 13mm thick).",
+    items:[
+      {brand:"Inzer",model:"Forever Lever Belt",price:"$100–130",pick:true,tags:["IPF approved","lever","10mm"],pros:["Industry standard","lasts a lifetime","easy lever adjustment"],cons:["Lever can pop open if not set right","stiff break-in period"]},
+      {brand:"SBD",model:"Belt",price:"$190–210",pick:false,tags:["IPF approved","lever","13mm"],pros:["Best quality on market","velcro + lever","extremely stiff"],cons:["Very expensive","overkill for newer lifters"]},
+      {brand:"A7",model:"Pioneer Cut Belt",price:"$130–160",pick:false,tags:["IPF approved","prong","10mm"],pros:["Comfortable taper","great for smaller waists","top-grain leather"],cons:["Prong can be slower between attempts"]},
+      {brand:"Rogue",model:"Ohio Lifting Belt",price:"$115–145",pick:false,tags:["IPF approved","prong","10mm"],pros:["High quality leather","very stiff","trusted brand"],cons:["Prong style","break-in takes a while"]},
+    ]
+  },
+  {
+    id:"sleeves", label:"Knee sleeves",
+    note:"7mm is the standard for powerlifting. Rehband is the comfort pick, SBD is the stiffness pick. Sizing matters a lot — measure your knee circumference carefully before ordering.",
+    items:[
+      {brand:"SBD",model:"Knee Sleeves",price:"$100–115",pick:true,tags:["IPF approved","7mm","stiff"],pros:["Best carryover of any sleeve","extremely supportive","durable"],cons:["Very expensive","tight to put on","runs small"]},
+      {brand:"Rehband",model:"7051 / RX",price:"$60–80",pick:false,tags:["IPF approved","7mm","comfortable"],pros:["Comfortable","good for high-rep work too","easier to get on"],cons:["Less carryover than SBD","less stiff"]},
+      {brand:"Stoic",model:"Knee Sleeves",price:"$50–65",pick:false,tags:["IPF approved","7mm","budget pick"],pros:["Great value","surprisingly stiff","popular on the platform"],cons:["Newer brand","less track record long-term"]},
+      {brand:"A7",model:"Knee Sleeves",price:"$65–80",pick:false,tags:["IPF approved","7mm"],pros:["Good stiffness","nice feel","popular in powerlifting community"],cons:["Sizing inconsistent across colorways"]},
+    ]
+  },
+  {
+    id:"wraps", label:"Wrist wraps",
+    note:"Stiffer wraps = more support but less feel. Longer wraps (36\") give more coverage. Most raw lifters do fine with 18–24\".",
+    items:[
+      {brand:"Inzer",model:"Iron Wrist Wraps",price:"$22–28",pick:true,tags:["IPF approved","stiff","36\""],pros:["Very stiff","great support","durable"],cons:["Can be stiff to break in","bulky"]},
+      {brand:"SBD",model:"Wrist Wraps",price:"$45–55",pick:false,tags:["IPF approved","flexible + stiff options"],pros:["High quality","comfortable","both stiffness options"],cons:["Expensive for wraps"]},
+      {brand:"Stoic",model:"Wrist Wraps",price:"$18–25",pick:false,tags:["IPF approved","budget"],pros:["Great value","solid stiffness","popular pick"],cons:["Nothing flashy but gets the job done"]},
+      {brand:"Mark Bell",model:"Sling Shot Wrist Wraps",price:"$25–35",pick:false,tags:["stiff","24\" or 36\""],pros:["Very popular","solid stiffness","good availability"],cons:["Double-check IPF approval for your fed"]},
+    ]
+  },
+  {
+    id:"shoes", label:"Squat shoes",
+    note:"Heel height varies — most lifters do well with 0.6\"–0.75\". Higher heel helps with ankle mobility and upright torso. Deadlift in flat shoes or socks (check fed rules on socks for DL).",
+    items:[
+      {brand:"Adidas",model:"Adipower / Powerlift",price:"$100–200",pick:true,tags:["heel lift","popular","wide sizing"],pros:["Industry standard","great heel","solid lockdown","Powerlift is budget-friendly"],cons:["Adipower can run narrow","pricier top models"]},
+      {brand:"Nike",model:"Romaleos 4",price:"$200–220",pick:false,tags:["heel lift","wide fit"],pros:["Great stability","wide platform","preferred by bigger lifters"],cons:["Expensive","heavy","limited colorways"]},
+      {brand:"Do-Win",model:"Classic Weightlifting Shoe",price:"$85–100",pick:false,tags:["heel lift","budget-friendly"],pros:["Excellent value","solid heel","underrated pick"],cons:["Less name recognition","harder to find in stores"]},
+      {brand:"Converse",model:"Chuck Taylor (flat)",price:"$55–70",pick:false,tags:["flat","deadlift","sumo"],pros:["Thin sole for max floor feel","cheap","easy to find"],cons:["No support","purely for deadlift/sumo squatters"]},
+    ]
+  },
+  {
+    id:"smelling", label:"Smelling salts",
+    note:"Ammonia-based. One sniff goes a long way — don't hold it under your nose. Single-use caps are more hygienic; bottles are more economical. Check fed rules — most allow them.",
+    items:[
+      {brand:"Nose Tork",model:"Single-use caps",price:"$15–20 / 10pk",pick:true,tags:["single-use","strong","popular"],pros:["Extremely strong","consistent hit every time","hygienic"],cons:["Single-use gets expensive over time"]},
+      {brand:"Ward",model:"Bottle",price:"$18–22",pick:false,tags:["bottle","reusable","strong"],pros:["Reusable","economical","very strong formula"],cons:["Potency fades over time if not capped properly"]},
+      {brand:"AmmoniaSport",model:"Bottle",price:"$12–18",pick:false,tags:["bottle","budget"],pros:["Affordable","good for training use"],cons:["Less consistent strength than top brands"]},
+    ]
+  },
+  {
+    id:"chalk", label:"Chalk",
+    note:"Block chalk is standard. Liquid chalk is useful for gyms that ban loose chalk during training, but go block on meet day. A little goes a long way.",
+    items:[
+      {brand:"Rogue",model:"Block Chalk",price:"$15–20 / 2lb",pick:false,tags:["block","meet standard"],pros:["Reliable","widely available","good grip"],cons:["A bit pricier than generic"]},
+      {brand:"Spri / Generic",model:"Block Chalk",price:"$8–12 / 2lb",pick:true,tags:["block","budget"],pros:["Same magnesium carbonate — identical performance","cheap"],cons:["No brand cache (who cares)"]},
+      {brand:"Liquid Grip",model:"Liquid Chalk",price:"$12–18",pick:false,tags:["liquid","training use"],pros:["Great for chalk-restricted gyms","mess-free"],cons:["Not ideal for heavy deadlifts on meet day — go block"]},
+    ]
+  },
+];
+
+const nav = document.getElementById('nav');
+const sections = document.getElementById('sections');
+
+data.forEach((cat,i) => {
+  const btn = document.createElement('button');
+  btn.textContent = cat.label;
+  btn.className = i===0?'active':'';
+  btn.onclick = () => {
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-'+cat.id).classList.add('active');
+  };
+  nav.appendChild(btn);
+
+  const sec = document.createElement('div');
+  sec.className = 'section'+(i===0?' active':'');
+  sec.id = 'sec-'+cat.id;
+
+  const grid = document.createElement('div');
+  grid.className = 'cards';
+
+  cat.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card'+(item.pick?' pick':'');
+
+    const top = document.createElement('div');
+    top.className = 'card-top';
+    top.innerHTML = `<span class="brand">${item.brand}</span><span class="price">${item.price}</span>`;
+    card.appendChild(top);
+
+    const model = document.createElement('div');
+    model.className = 'model';
+    model.textContent = item.model;
+    card.appendChild(model);
+
+    const badges = document.createElement('div');
+    badges.className = 'badge-row';
+    if(item.pick){
+      const pb = document.createElement('span');
+      pb.className = 'badge b-pick';
+      pb.textContent = 'top pick';
+      badges.appendChild(pb);
+    }
+    item.tags.forEach(t => {
+      const b = document.createElement('span');
+      b.className = 'badge b-gray';
+      b.textContent = t;
+      badges.appendChild(b);
+    });
+    card.appendChild(badges);
+
+    const pc = document.createElement('div');
+    pc.className = 'pros-cons';
+    pc.innerHTML = item.pros.map(p=>`<span class="pro">+ ${p}</span>`).join('<br>')+
+      '<br>'+item.cons.map(c=>`<span class="con">- ${c}</span>`).join('<br>');
+    card.appendChild(pc);
+
+    grid.appendChild(card);
+  });
+
+  sec.appendChild(grid);
+
+  if(cat.note){
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.textContent = cat.note;
+    sec.appendChild(note);
+  }
+
+  const askBtn = document.createElement('button');
+  askBtn.className = 'ask-btn';
+  askBtn.textContent = `Ask more about ${cat.label.toLowerCase()} ↗`;
+  askBtn.onclick = () => sendPrompt(`Tell me more about choosing ${cat.label.toLowerCase()} for powerlifting competition`);
+  sec.appendChild(askBtn);
+
+  sections.appendChild(sec);
+});
+</script>
