@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rest Period Calculator — Zenith Performance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --white: #FFFFFF;
+      --amber: #E7D19D;
+      --gold: #AE9465;
+      --blue: #30586E;
+      --gray: #5A5554;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --border: #2A2A2A;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Josefin Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    h1 span {
+      color: var(--amber);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 32px;
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 16px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--white);
+      text-align: left;
+      width: 100%;
+    }
+
+    .option:hover {
+      border-color: var(--gold);
+    }
+
+    .option.selected {
+      border-color: var(--amber);
+      background: #1E1A12;
+    }
+
+    .option .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--gray);
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .option.selected .dot {
+      border-color: var(--amber);
+      background: var(--amber);
+    }
+
+    .rpe-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rpe-btn {
+      flex: 1;
+      min-width: 48px;
+      padding: 12px 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--white);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      text-align: center;
+    }
+
+    .rpe-btn:hover { border-color: var(--gold); }
+    .rpe-btn.selected { border-color: var(--amber); background: #1E1A12; color: var(--amber); }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    /* RESULT */
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--amber);
+      border-radius: 2px;
+      padding: 32px;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .result-card.visible { display: block; }
+
+    .result-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .result-range {
+      font-size: clamp(36px, 8vw, 56px);
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .result-unit {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .result-note {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* TIMER */
+    .timer-display {
+      font-size: clamp(48px, 12vw, 80px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-display.running { color: var(--amber); }
+    .timer-display.done { color: #4CAF50; }
+
+    .timer-status {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 24px;
+      height: 16px;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--amber);
+      color: var(--black);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--gray);
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--amber);
+      width: 0%;
+      transition: width 1s linear;
+    }
+
+    footer {
+      margin-top: 32px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gray);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    footer span { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Zenith Performance</div>
+  <h1>Rest Period <span>Calculator</span></h1>
+  <div class="subtitle">Scale your rest. Maximize your output.</div>
+</header>
+
+<!-- STEP 1: SET TYPE -->
+<div class="card">
+  <div class="section-label">01 — What are you resting between?</div>
+  <div class="options" id="setType">
+    <button class="option" data-value="warmup-top">
+      <span class="dot"></span> Last warm up → Top set
+    </button>
+    <button class="option" data-value="top-backdown">
+      <span class="dot"></span> Top set → Back downs
+    </button>
+    <button class="option" data-value="backdown-backdown">
+      <span class="dot"></span> Back down → Back down
+    </button>
+    <button class="option" data-value="accessory">
+      <span class="dot"></span> Accessory → Accessory
+    </button>
+  </div>
+</div>
+
+<!-- STEP 2: LIFT -->
+<div class="card" id="liftCard">
+  <div class="section-label">02 — Which lift?</div>
+  <div class="options" id="liftType">
+    <button class="option" data-value="squat"><span class="dot"></span> Squat</button>
+    <button class="option" data-value="bench"><span class="dot"></span> Bench</button>
+    <button class="option" data-value="conventional"><span class="dot"></span> Conventional Deadlift</button>
+    <button class="option" data-value="sumo"><span class="dot"></span> Sumo Deadlift</button>
+  </div>
+</div>
+
+<!-- COMPOUND ACCESSORY QUESTION (shown only for accessories) -->
+<div class="card" id="compoundCard" style="display:none;">
+  <div class="section-label">02 — Does this movement recruit multiple muscle groups or joints?</div>
+  <div class="options" id="compoundType">
+    <button class="option" data-value="yes"><span class="dot"></span> Yes — compound (leg press, rows, RDLs)</button>
+    <button class="option" data-value="no"><span class="dot"></span> No — isolation (leg extensions, pushdowns)</button>
+  </div>
+</div>
+
+<!-- STEP 3: RPE / RIR -->
+<div class="card" id="rpeCard">
+  <div class="section-label" id="rpeLabel">03 — What is your RPE?</div>
+  <div class="rpe-row" id="rpeOptions"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-card" id="resultCard">
+  <div class="result-label">Recommended Rest</div>
+  <div class="result-range" id="resultRange">—</div>
+  <div class="result-unit">minutes</div>
+  <div class="result-note" id="resultNote"></div>
+
+  <div class="divider"></div>
+
+  <div class="result-label">Timer</div>
+  <div class="timer-display" id="timerDisplay">00:00</div>
+  <div class="timer-status" id="timerStatus"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="timer-controls">
+    <button class="btn btn-primary" id="startBtn" onclick="startTimer()">Start</button>
+    <button class="btn btn-secondary" id="resetBtn" onclick="resetTimer()">Reset</button>
+  </div>
+</div>
+
+<footer>Zenith Performance &nbsp;·&nbsp; <span>Exceed Your Peak</span></footer>
+
+<script>
+  let selectedSetType = null;
+  let selectedLift = null;
+  let selectedRPE = null;
+  let timerInterval = null;
+  let timerSeconds = 0;
+  let totalSeconds = 0;
+  let timerRunning = false;
+
+  // RPE options per set type
+  const rpeConfig = {
+    'accessory': { label: '03 — Reps in reserve (RIR)?', values: ['3+ RIR', '2 RIR', '1 RIR', '0 RIR'] },
+    'default': { label: '03 — What is your RPE?', values: ['6', '7', '8', '9', '10'] }
+  };
+
+  // Lift base modifier in seconds (added on top of RPE-based rest)
+  function getLiftModifier(lift) {
+    if (lift === 'bench') return 0;
+    if (lift === 'squat' || lift === 'sumo') return 30;
+    if (lift === 'conventional') return 150;
+    return 0;
+  }
+
+  // Rest period logic (in seconds, [min, max])
+  // Scales cleanly with RPE: each step adds ~30-60 seconds
+  function getRestPeriod(setType, lift, rpe) {
+    const mod = getLiftModifier(lift);
+
+    if (setType === 'accessory') {
+      const compoundExtra = (window.selectedCompound === 'yes') ? 60 : 0;
+      if (rpe === '3+ RIR') return [60 + compoundExtra, 60 + compoundExtra];
+      if (rpe === '2 RIR') return [60 + compoundExtra, 90 + compoundExtra];
+      if (rpe === '1 RIR') return [90 + compoundExtra, 120 + compoundExtra];
+      return [120 + compoundExtra, 120 + compoundExtra]; // 0 RIR
+    }
+
+    if (setType === 'warmup-top') {
+      // RPE 6: 90-120s | 7: 120-180s | 8: 180-240s | 9: 240-300s | 10: 300-300s
+      const base = {6:[90,120], 7:[120,180], 8:[180,240], 9:[240,300], 10:[300,300]};
+      const [mn, mx] = base[rpe] || [120,180];
+      return [mn + mod, mx + mod];
+    }
+
+    if (setType === 'top-backdown') {
+      // RPE 6: 180-240s | 7: 240-300s | 8: 300-360s | 9: 360-420s | 10: 480-540s
+      const base = {6:[180,240], 7:[240,300], 8:[300,360], 9:[360,420], 10:[480,540]};
+      const [mn, mx] = base[rpe] || [240,300];
+      return [mn + mod, mx + mod];
+    }
+
+    if (setType === 'backdown-backdown') {
+      // RPE 6: 120-180s | 7: 150-210s | 8: 180-240s | 9: 240-300s | 10: 300-360s
+      const base = {6:[120,180], 7:[150,210], 8:[180,240], 9:[240,300], 10:[300,360]};
+      const [mn, mx] = base[rpe] || [150,210];
+      return [mn + mod, mx + mod];
+    }
+
+    return [180, 300];
+  }
+
+  function getNotes(setType, lift, rpe) {
+    const isConventional = lift === 'conventional';
+    let note = '';
+
+    if (setType === 'accessory') {
+      const isCompound = window.selectedCompound === 'yes';
+      if (rpe === '1 RIR' || rpe === '0 RIR') {
+        note = isCompound
+          ? 'Close to failure on a compound movement. The extra minute matters here — multiple muscle groups need more recovery. Stay in the work.'
+          : 'You are close to failure. Two minutes max. Stay in the work — the stimulus is the point.';
+      } else {
+        note = isCompound
+          ? 'Compound movement — multiple joints and muscle groups involved. Take the extra minute. Keep the pump. Stop scrolling.'
+          : 'More than two reps in the tank. One minute. Keep the pump. Stop scrolling.';
+      }
+    } else if (setType === 'warmup-top') {
+      note = `Your last warm up moved well because you recovered. Do the same before your top set.`;
+    } else {
+      note = rpe >= 9
+        ? 'You just maxed out your nervous system. Give it time. Rushing into back downs is how you turn a good session into a bad one.'
+        : 'Top set is done. Rest fully before you ask your body to repeat.';
+    }
+
+    if (isConventional && setType !== 'accessory') {
+      note += ' Conventional deadlift adds 2–3 minutes on top — it is the most systemically taxing lift you will do.';
+    }
+
+    return note;
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  }
+
+  function setupRPE(setType) {
+    const config = setType === 'accessory' ? rpeConfig['accessory'] : rpeConfig['default'];
+    document.getElementById('rpeLabel').textContent = config.label;
+    const container = document.getElementById('rpeOptions');
+    container.innerHTML = '';
+    config.values.forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'rpe-btn';
+      btn.textContent = v;
+      btn.dataset.value = v;
+      btn.onclick = () => selectRPE(v, btn);
+      container.appendChild(btn);
+    });
+    selectedRPE = null;
+    hideResult();
+  }
+
+  function selectOption(groupId, value, el) {
+    document.querySelectorAll(`#${groupId} .option`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+
+    if (groupId === 'setType') {
+      selectedSetType = value;
+      selectedLift = null;
+      selectedRPE = null;
+      window.selectedCompound = null;
+      document.querySelectorAll('#liftType .option').forEach(o => o.classList.remove('selected'));
+      document.querySelectorAll('#compoundType .option').forEach(o => o.classList.remove('selected'));
+      setupRPE(value);
+      hideResult();
+      // Hide lift for accessories, show compound question instead
+      document.getElementById('liftCard').style.display = value === 'accessory' ? 'none' : 'block';
+      document.getElementById('compoundCard').style.display = value === 'accessory' ? 'block' : 'none';
+      if (value === 'accessory') {
+        selectedLift = 'other';
+        // Don't calculate yet — wait for compound selection and RIR
+      }
+    } else if (groupId === 'liftType') {
+      selectedLift = value;
+      if (selectedRPE) calculate();
+    } else if (groupId === 'compoundType') {
+      window.selectedCompound = value;
+      if (selectedRPE) calculate();
+    }
+  }
+
+  function selectRPE(value, el) {
+    document.querySelectorAll('#rpeOptions .rpe-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedRPE = isNaN(value) ? value : parseInt(value);
+    if (selectedSetType === 'accessory' && window.selectedCompound && selectedRPE) calculate();
+    else if (selectedSetType && selectedLift && selectedRPE) calculate();
+  }
+
+  function calculate() {
+    const [minS, maxS] = getRestPeriod(selectedSetType, selectedLift, selectedRPE);
+    const minM = (minS / 60).toFixed(0);
+    const maxM = (maxS / 60).toFixed(0);
+
+    const rangeText = minM === maxM ? `${minM}` : `${minM} – ${maxM}`;
+    document.getElementById('resultRange').textContent = rangeText;
+    document.getElementById('resultNote').textContent = getNotes(selectedSetType, selectedLift, selectedRPE);
+
+    // Set timer to nearest full minute from minimum of range
+    totalSeconds = Math.round(minS / 60) * 60;
+    timerSeconds = totalSeconds;
+    timerRunning = false;
+    clearInterval(timerInterval);
+    updateTimerDisplay();
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('timerStatus').textContent = '';
+    document.getElementById('timerDisplay').className = 'timer-display';
+    document.getElementById('startBtn').textContent = 'Start';
+
+    document.getElementById('resultCard').classList.add('visible');
+  }
+
+  function hideResult() {
+    document.getElementById('resultCard').classList.remove('visible');
+    clearInterval(timerInterval);
+    timerRunning = false;
+  }
+
+  function updateTimerDisplay() {
+    document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
+  }
+
+  function startTimer() {
+    if (timerRunning) {
+      // Pause
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('startBtn').textContent = 'Resume';
+      document.getElementById('timerStatus').textContent = 'Paused';
+      return;
+    }
+
+    if (timerSeconds === 0) {
+      timerSeconds = totalSeconds;
+      document.getElementById('progressFill').style.width = '0%';
+    }
+
+    timerRunning = true;
+    document.getElementById('startBtn').textContent = 'Pause';
+    document.getElementById('timerStatus').textContent = 'Resting...';
+    document.getElementById('timerDisplay').className = 'timer-display running';
+
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+
+      const pct = ((totalSeconds - timerSeconds) / totalSeconds) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timerDisplay').className = 'timer-display done';
+        document.getElementById('timerDisplay').textContent = '00:00';
+        document.getElementById('timerStatus').textContent = 'Rest complete — time to work.';
+        document.getElementById('startBtn').textContent = 'Start';
+        document.getElementById('progressFill').style.width = '100%';
+      }
+    }, 1000);
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSeconds = totalSeconds;
+    updateTimerDisplay();
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('timerStatus').textContent = '';
+    document.getElementById('timerDisplay').className = 'timer-display';
+    document.getElementById('startBtn').textContent = 'Start';
+  }
+
+  // Wire up option buttons
+  document.querySelectorAll('#setType .option').forEach(btn => {
+    btn.onclick = () => selectOption('setType', btn.dataset.value, btn);
+  });
+  document.querySelectorAll('#liftType .option').forEach(btn => {
+    btn.onclick = () => selectOption('liftType', btn.dataset.value, btn);
+  });
+  document.querySelectorAll('#compoundType .option').forEach(btn => {
+    btn.onclick = () => selectOption('compoundType', btn.dataset.value, btn);
+  });
+</script>
+</body>
+</html>
