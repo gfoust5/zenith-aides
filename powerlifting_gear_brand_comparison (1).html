@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gear Brand Comparison — Zenith Aides</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/CircleWhite.png">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Josefin Sans', sans-serif; background: #000; color: #fff; min-height: 100vh; }
+
+  header {
+    background: #000;
+    border-bottom: 1px solid #AE9465;
+    padding: 32px 48px 28px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 340px; height: 340px;
+    border: 1px solid #AE9465;
+    border-radius: 50%;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .logo-img { height: 40px; width: auto; }
+  .return-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #AE9465;
+    background: transparent; border: 1px solid #AE9465; border-radius: 2px;
+    padding: 7px 14px; cursor: pointer; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .return-btn::before { content: '←'; font-size: 11px; }
+  .return-btn:hover { background: #AE9465; color: #000; }
+  .header-eyebrow { font-size: 10px; letter-spacing: 0.3em; color: #AE9465; font-weight: 600; text-transform: uppercase; }
+  .header-title { font-size: 32px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff; line-height: 1.05; }
+  .header-title span { color: #E7D19D; }
+  .header-sub { font-size: 11px; color: #5A5554; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.7; max-width: 520px; }
+
+  .cat-nav {
+    background: #060606; border-bottom: 1px solid #111;
+    padding: 0 48px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+  }
+  .cat-nav::-webkit-scrollbar { display: none; }
+  .cat-btn {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #5A5554;
+    background: transparent; border: none; border-bottom: 2px solid transparent;
+    padding: 16px 20px; cursor: pointer; white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .cat-btn:hover { color: #AE9465; }
+  .cat-btn.active { color: #E7D19D; border-bottom-color: #AE9465; }
+
+  main { padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .cat-note {
+    background: #080808; border-left: 2px solid #AE9465;
+    padding: 12px 16px; margin-bottom: 28px;
+    font-size: 11px; color: #5A5554; letter-spacing: 0.08em; line-height: 1.8; text-transform: uppercase;
+  }
+  .cat-note strong { color: #E7D19D; font-weight: 600; }
+
+  /* sub-section label for flat shoes */
+  .sub-label {
+    font-size: 10px; letter-spacing: 0.28em; color: #AE9465; font-weight: 600;
+    text-transform: uppercase; margin: 28px 0 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sub-label::after { content: ''; flex: 1; height: 1px; background: #151515; }
+  .sub-label:first-of-type { margin-top: 0; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+
+  .gear-card {
+    background: #080808; border: 1px solid #1a1a1a; border-radius: 3px;
+    padding: 22px 20px 18px; display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden; transition: border-color 0.2s;
+  }
+  .gear-card.top-pick { border-color: #AE9465; }
+  .gear-card.top-pick::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, #AE9465, #E7D19D);
+  }
+  .gear-card:not(.top-pick):hover { border-color: #2a2a2a; }
+
+  .pick-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #000; background: linear-gradient(90deg, #AE9465, #E7D19D);
+    padding: 3px 8px; border-radius: 1px;
+  }
+  .card-brand { font-size: 16px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; padding-right: 60px; }
+  .card-model { font-size: 11px; color: #5A5554; letter-spacing: 0.1em; text-transform: uppercase; }
+  .card-price { font-size: 13px; font-weight: 600; color: #AE9465; letter-spacing: 0.06em; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #5A5554; border: 1px solid #1e1e1e; padding: 2px 8px; border-radius: 1px;
+  }
+  .tag.approved { color: #AE9465; border-color: #2a2218; }
+  .divider-line { height: 1px; background: #111; }
+  .pros-cons { display: flex; flex-direction: column; gap: 4px; }
+  .pc-row { font-size: 11px; letter-spacing: 0.06em; line-height: 1.6; display: flex; gap: 6px; align-items: flex-start; }
+  .pc-icon { font-size: 10px; margin-top: 2px; flex-shrink: 0; }
+  .pc-icon.pro { color: #6a9e4a; }
+  .pc-icon.con { color: #8a3a3a; }
+  .pc-text { color: #5A5554; }
+
+  footer {
+    padding: 22px 48px; border-top: 1px solid #0e0e0e;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .footer-brand { font-size: 10px; letter-spacing: 0.22em; color: #222; text-transform: uppercase; }
+  .footer-tag { font-size: 10px; letter-spacing: 0.15em; color: #222; text-transform: uppercase; }
+
+  @media (max-width: 600px) {
+    header { padding: 24px 20px 20px; }
+    .cat-nav { padding: 0 20px; }
+    main { padding: 28px 20px 48px; }
+    footer { padding: 18px 20px; }
+    .header-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <img class="logo-img" src="https://raw.githubusercontent.com/gfoust5/zenith-aides/main/ZP_1PrimaryGold.png" alt="Zenith Performance">
+    <a class="return-btn" href="index.html">Back to Aides</a>
+  </div>
+  <div class="header-titles">
+    <div class="header-eyebrow">Zenith Aides</div>
+    <h1 class="header-title">Gear <span>Comparison</span></h1>
+    <p class="header-sub">IPF-approved equipment broken down by category. Top picks flagged. No fluff.</p>
+  </div>
+</header>
+
+<nav class="cat-nav" id="cat-nav"></nav>
+<main id="main"></main>
+
+<footer>
+  <span class="footer-brand">© Zenith Performance</span>
+  <span class="footer-tag">Coaching Tools — Restricted Use</span>
+</footer>
+
+<script>
+const data = [
+  {
+    id: "singlet", label: "Singlet",
+    note: "Must be <strong>USAPL/IPF-approved</strong>. Check the IPF approved list before buying — not all singlets from every brand are approved for every fed.",
+    items: [
+      { brand: "SBD", model: "Singlet", price: "$90–110", pick: true, tags: ["IPF Approved", "Premium"], pros: ["Best fit on the market", "flattering cut", "looks sharp on the platform", "holds up for years"], cons: ["Pricey", "sometimes backordered"] },
+      { brand: "Titan", model: "Triumph Singlet", price: "$50–65", pick: false, tags: ["IPF Approved", "Durable"], pros: ["Tank — incredibly durable", "affordable", "solid on-platform option"], cons: ["Older-school aesthetic", "limited colorways"] },
+      { brand: "A7", model: "Meet Singlet", price: "$65–80", pick: false, tags: ["IPF Approved", "Popular"], pros: ["Great fit", "wide size range", "tons of colorways"], cons: ["Fabric thinner than Titan or Inzer", "sizing can run small"] },
+      { brand: "Inzer", model: "Power Singlet", price: "$50–60", pick: false, tags: ["IPF Approved", "Classic"], pros: ["Extremely durable", "proven in the sport for decades", "great value"], cons: ["Boxy fit on some body types", "nothing flashy"] },
+    ]
+  },
+  {
+    id: "belt", label: "Belt",
+    note: "<strong>Lever vs prong</strong> is personal preference. Lever is faster between attempts; prong is more adjustable if your weight fluctuates. Go 10mm for most lifters, 13mm for advanced. IPF-spec: max 10cm wide, 13mm thick.",
+    items: [
+      { brand: "SBD", model: "Belt", price: "$190–210", pick: true, tags: ["IPF Approved", "Lever", "13mm"], pros: ["Best quality on the market", "velcro + lever combo", "extremely stiff", "built to last a career"], cons: ["Very expensive", "overkill for newer lifters"] },
+      { brand: "Inzer", model: "Forever Lever Belt", price: "$100–130", pick: false, tags: ["IPF Approved", "Lever", "10mm"], pros: ["Industry standard", "lasts a lifetime", "easy lever adjustment"], cons: ["Lever can pop if not set right", "stiff break-in period"] },
+      { brand: "A7", model: "Pioneer Cut Belt", price: "$130–160", pick: false, tags: ["IPF Approved", "Prong", "10mm"], pros: ["Comfortable taper", "great for smaller waists", "top-grain leather"], cons: ["Prong is slower between attempts"] },
+      { brand: "Strength Shop", model: "13mm Lever Belt", price: "$70–90", pick: false, tags: ["IPF Approved", "Lever", "Budget"], pros: ["Excellent value for the price", "stiff right out of the box", "solid budget entry"], cons: ["Less name recognition", "finish quality varies"] },
+      { brand: "Inzer", model: "Forever Prong Belt", price: "$85–110", pick: false, tags: ["IPF Approved", "Prong", "Budget"], pros: ["Affordable", "proven durability", "good for lifters whose weight fluctuates"], cons: ["Prong is slower between attempts", "long break-in"] },
+    ]
+  },
+  {
+    id: "sleeves", label: "Knee Sleeves",
+    note: "<strong>7mm is standard</strong> for powerlifting. More stiffness = more carryover but harder to get on. Measure your knee circumference before ordering — sizing is everything.",
+    items: [
+      { brand: "SBD", model: "Knee Sleeves", price: "$100–115", pick: true, tags: ["IPF Approved", "7mm", "Stiff"], pros: ["Best carryover of any sleeve", "extremely supportive", "durable"], cons: ["Expensive", "tight to get on", "runs small"] },
+      { brand: "Inzer", model: "Z-Sleeve", price: "$55–70", pick: false, tags: ["IPF Approved", "7mm", "Stiff"], pros: ["Very stiff", "great carryover", "proven durability", "more affordable than SBD"], cons: ["Difficult to get on", "can feel restrictive at the top"] },
+      { brand: "A7", model: "Knee Sleeves", price: "$65–80", pick: false, tags: ["IPF Approved", "7mm"], pros: ["Good stiffness", "comfortable", "popular in the powerlifting community"], cons: ["Sizing inconsistent across colorways"] },
+      { brand: "Stoic", model: "Knee Sleeves", price: "$50–65", pick: false, tags: ["IPF Approved", "7mm", "Budget Pick"], pros: ["Great value", "surprisingly stiff", "popular on the platform"], cons: ["Newer brand", "less long-term track record"] },
+    ]
+  },
+  {
+    id: "wraps", label: "Wrist Wraps",
+    note: "<strong>Stiffer = more support, less feel.</strong> Longer wraps (36\") give more coverage. Most raw lifters do fine with 18–24\".",
+    items: [
+      { brand: "SBD", model: "Wrist Wraps", price: "$45–55", pick: true, tags: ["IPF Approved", "Flexible + Stiff Options"], pros: ["Best wrist wrap on the market", "both stiffness options available", "comfortable and supportive", "premium construction"], cons: ["Expensive for wraps"] },
+      { brand: "Inzer", model: "Iron Wrist Wraps", price: "$22–28", pick: false, tags: ["IPF Approved", "Stiff", "36\""], pros: ["Very stiff", "great support", "durable"], cons: ["Bulky", "stiff break-in period"] },
+      { brand: "Stoic", model: "Wrist Wraps", price: "$18–25", pick: false, tags: ["IPF Approved", "Budget"], pros: ["Great value", "solid stiffness", "popular pick"], cons: ["Nothing flashy — gets the job done"] },
+      { brand: "Mark Bell", model: "Sling Shot Wraps", price: "$25–35", pick: false, tags: ["Stiff", "24\" or 36\""], pros: ["Very popular", "solid stiffness", "good availability"], cons: ["Double-check IPF approval for your fed"] },
+    ]
+  },
+  {
+    id: "squat-shoes", label: "Squat Shoes",
+    note: "Elevated heel helps <strong>ankle mobility and an upright torso</strong>. Most lifters do well with 0.6\"–0.75\" heel height. Go stiffer sole for max force transfer.",
+    items: [
+      { brand: "Nike", model: "Romaleos 4", price: "$200–220", pick: true, tags: ["Heel Lift", "Wide Fit", "Stiff Sole"], pros: ["Best stability on the market", "wide platform preferred by bigger lifters", "extremely stiff sole", "great lockdown"], cons: ["Expensive", "heavy", "limited colorways"] },
+      { brand: "Adidas", model: "Adipower / Powerlift", price: "$100–200", pick: false, tags: ["Heel Lift", "Popular", "Wide Sizing"], pros: ["Industry standard", "great heel", "solid lockdown", "Powerlift is a budget-friendly entry"], cons: ["Adipower can run narrow", "pricier top models"] },
+      { brand: "Do-Win", model: "Classic WL Shoe", price: "$85–100", pick: false, tags: ["Heel Lift", "Budget-Friendly"], pros: ["Excellent value", "solid heel", "underrated pick"], cons: ["Less name recognition", "harder to find in stores"] },
+    ]
+  },
+  {
+    id: "flat-shoes", label: "Flat Shoes",
+    note: "Flat soles maximize <strong>floor contact and force transfer</strong> for bench and deadlift. Thin is king — you want to feel the ground. Check fed rules on allowable footwear.",
+    subsections: [
+      {
+        label: "Deadlift",
+        items: [
+          { brand: "Notorious Lift", model: "Deadlift Slippers", price: "$40–55", pick: true, tags: ["Flat", "Deadlift", "Sumo + Conv"], pros: ["Thinnest sole available", "max floor feel", "built specifically for powerlifting deadlifts", "legal in most feds"], cons: ["Not a walking shoe — platform use only"] },
+          { brand: "Sabo", model: "Deadlift Shoe", price: "$80–100", pick: false, tags: ["Flat", "Sumo", "Deadlift"], pros: ["Excellent for sumo", "low profile", "great ankle strap lockdown", "durable"], cons: ["Pricier than slippers", "strap takes getting used to"] },
+          { brand: "Adidas", model: "Samba", price: "$90–110", pick: false, tags: ["Flat", "Deadlift", "Accessible"], pros: ["Thin sole", "widely available", "comfortable", "popular crossover choice"], cons: ["Not purpose-built for powerlifting", "slightly thicker than slippers"] },
+        ]
+      },
+      {
+        label: "Bench",
+        items: [
+          { brand: "Avancus", model: "Bench Press Shoe", price: "$80–110", pick: true, tags: ["Flat", "Bench", "Purpose-Built"], pros: ["Designed specifically for bench press leg drive", "wide stable base", "flat and grippy sole"], cons: ["Niche product — harder to source", "overkill for newer lifters"] },
+          { brand: "Hyper V", model: "No. 1 Grip Shoe", price: "$40–60", pick: false, tags: ["Flat", "Bench", "Grippy"], pros: ["Extremely grippy sole", "flat platform", "affordable", "comfortable for long meet days"], cons: ["Not purpose-built for bench", "check fed rules on sole texture"] },
+          { brand: "Notorious Lift", model: "Deadlift Slippers", price: "$40–55", pick: false, tags: ["Flat", "Bench", "Crossover"], pros: ["Works for bench too", "thin sole keeps feet planted", "consistent footwear across lifts"], cons: ["Less lateral stability than a purpose-built bench shoe"] },
+        ]
+      }
+    ]
+  },
+  {
+    id: "salts", label: "Smelling Salts",
+    note: "<strong>One sniff goes a long way</strong> — don't hold it under your nose. Single-use caps are more hygienic; bottles are more economical. Most feds allow them — verify before meet day.",
+    items: [
+      { brand: "AHHHH", model: "Ammonia Caps", price: "$20–25 / 10pk", pick: true, tags: ["Single-Use", "Strongest Available", "Popular"], pros: ["Widely considered the strongest formula on the market", "consistent hit every time", "hygienic single-use", "community favorite"], cons: ["Single-use gets expensive over time", "not for the faint of heart"] },
+      { brand: "Nose Tork", model: "Single-Use Caps", price: "$15–20 / 10pk", pick: false, tags: ["Single-Use", "Strong", "Popular"], pros: ["Extremely strong", "consistent every time", "hygienic"], cons: ["Gets expensive over time", "not as strong as AHHHH"] },
+      { brand: "Ward", model: "Bottle", price: "$18–22", pick: false, tags: ["Bottle", "Reusable", "Strong"], pros: ["Reusable", "economical", "very strong formula"], cons: ["Potency fades if not capped properly"] },
+      { brand: "AmmoniaSport", model: "Bottle", price: "$12–18", pick: false, tags: ["Bottle", "Budget"], pros: ["Affordable", "good for training use"], cons: ["Less consistent strength than top brands"] },
+    ]
+  },
+  {
+    id: "chalk", label: "Chalk",
+    note: "<strong>Block chalk is standard.</strong> Liquid chalk is useful for chalk-restricted gyms during training — go block on meet day. A little goes a long way.",
+    items: [
+      { brand: "Generic / Spri", model: "Block Chalk", price: "$8–12 / 2lb", pick: true, tags: ["Block", "Budget"], pros: ["Same magnesium carbonate as premium brands", "identical performance", "cheap"], cons: ["No brand cache — who cares"] },
+      { brand: "Rogue", model: "Block Chalk", price: "$15–20 / 2lb", pick: false, tags: ["Block", "Meet Standard"], pros: ["Reliable", "widely available", "good grip"], cons: ["Pricier than generic for no added benefit"] },
+      { brand: "Liquid Grip", model: "Liquid Chalk", price: "$12–18", pick: false, tags: ["Liquid", "Training Use"], pros: ["Great for chalk-restricted gyms", "mess-free"], cons: ["Not ideal for heavy deadlifts on meet day — go block"] },
+    ]
+  },
+];
+
+const nav = document.getElementById('cat-nav');
+const main = document.getElementById('main');
+
+function buildCard(item) {
+  const card = document.createElement('div');
+  card.className = 'gear-card' + (item.pick ? ' top-pick' : '');
+
+  if (item.pick) {
+    const badge = document.createElement('div');
+    badge.className = 'pick-badge';
+    badge.textContent = 'Top Pick';
+    card.appendChild(badge);
+  }
+
+  const brand = document.createElement('div');
+  brand.className = 'card-brand';
+  brand.textContent = item.brand;
+  card.appendChild(brand);
+
+  const model = document.createElement('div');
+  model.className = 'card-model';
+  model.textContent = item.model;
+  card.appendChild(model);
+
+  const price = document.createElement('div');
+  price.className = 'card-price';
+  price.textContent = item.price;
+  card.appendChild(price);
+
+  const tagRow = document.createElement('div');
+  tagRow.className = 'tag-row';
+  item.tags.forEach(t => {
+    const tag = document.createElement('span');
+    tag.className = 'tag' + (t.toLowerCase().includes('ipf') ? ' approved' : '');
+    tag.textContent = t;
+    tagRow.appendChild(tag);
+  });
+  card.appendChild(tagRow);
+
+  const divider = document.createElement('div');
+  divider.className = 'divider-line';
+  card.appendChild(divider);
+
+  const pc = document.createElement('div');
+  pc.className = 'pros-cons';
+  item.pros.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'pc-row';
+    row.innerHTML = `<span class="pc-icon pro">+</span><span class="pc-text">${p}</span>`;
+    pc.appendChild(row);
+  });
+  item.cons.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'pc-row';
+    row.innerHTML = `<span class="pc-icon con">−</span><span class="pc-text">${c}</span>`;
+    pc.appendChild(row);
+  });
+  card.appendChild(pc);
+
+  return card;
+}
+
+data.forEach((cat, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = cat.label;
+  btn.onclick = () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-' + cat.id).classList.add('active');
+  };
+  nav.appendChild(btn);
+
+  const sec = document.createElement('div');
+  sec.className = 'section' + (i === 0 ? ' active' : '');
+  sec.id = 'sec-' + cat.id;
+
+  if (cat.note) {
+    const note = document.createElement('div');
+    note.className = 'cat-note';
+    note.innerHTML = cat.note;
+    sec.appendChild(note);
+  }
+
+  // flat shoes has subsections
+  if (cat.subsections) {
+    cat.subsections.forEach(sub => {
+      const subLabel = document.createElement('div');
+      subLabel.className = 'sub-label';
+      subLabel.textContent = sub.label;
+      sec.appendChild(subLabel);
+
+      const grid = document.createElement('div');
+      grid.className = 'cards';
+      sub.items.forEach(item => grid.appendChild(buildCard(item)));
+      sec.appendChild(grid);
+    });
+  } else {
+    const grid = document.createElement('div');
+    grid.className = 'cards';
+    cat.items.forEach(item => grid.appendChild(buildCard(item)));
+    sec.appendChild(grid);
+  }
+
+  main.appendChild(sec);
+});
+</script>
+</body>
+</html>
